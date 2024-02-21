@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="product">
+
+	<select id="list_product" resultType="market.ProductDTO">
+		select *
+		from (
+		select rownum
+		as rn, A.*
+		from (
+		select * from product order by write_code desc
+		) A
+		)
+		where rn between #{start} and #{end}
+	</select>
+
+	<insert id="insert">
+		insert into product (write_code, userid,
+		subject,price, contents, filename)values
+		((select
+		nvl(max(write_code)+1,1)from product),#{userid}, #{subject}, #{price},
+		#{contents}, #{filename})
+	</insert>
+
+	<select id="count" resultType="int">
+		select count(*) from product
+	</select>
+
+	<select id="mylist" resultType="market.ProductDTO">
+		select * from product
+		where
+		userid
+		= #{userid}
+	</select>
+
+
+	<select id="detail_product" resultType="market.ProductDTO">
+		select * from product
+		where write_code=#{write_code}
+	</select>
+
+
+
+	<select id="love_check" parameterType="map" resultType="int">
+		select
+		count(*) from love where write_code = #{write_code} and userid =
+		#{userid}
+	</select>
+
+	<update id="update">
+		update product set
+		subject=#{subject},price=#{price},contents=#{contents},filename=#{filename}
+		where write_code=#{write_code}
+	</update>
+
+	<delete id="delete">
+		delete from product where write_code=#{write_code}
+	</delete>
+
+
+	<update id="see">
+		update product set see = see + 1 where write_code =
+		#{write_code}
+	</update>
+
+
+
+</mapper>

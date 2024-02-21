@@ -1,0 +1,106 @@
+package market;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
+import sqlmap.MybatisManager;
+
+public class ProductDAO {
+
+	public List<ProductDTO> listProduct(int pageStart, int pageEnd) {
+		List<ProductDTO> list = null;
+		SqlSession session = MybatisManager.getInstance().openSession();
+		Map<String,Object> map = new HashMap<>();
+		map.put("start", pageStart);
+		map.put("end", pageEnd);
+		list = session.selectList("product.list_product",map);
+		return list;
+	}
+	
+	public int count() {
+		int result = 0;
+		SqlSession session = MybatisManager.getInstance().openSession();
+		
+		try {
+			result = session.selectOne("product.count");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) session.close();
+		}
+		return result;
+	}
+	
+
+	public void insertProduct(ProductDTO dto) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.insert("product.insert", dto);
+		session.commit();
+		session.close();
+
+	}
+
+	
+
+	public List<ProductDTO> mylist(String userid) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		List<ProductDTO> list = session.selectList("product.mylist", userid);
+		session.close();
+		return list;
+
+	}
+
+	public ProductDTO detailProduct(int write_code) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		ProductDTO dto = session.selectOne("product.detail_product", write_code);
+		session.close();
+		return dto;
+	}
+
+	public int loveCheck(String userid, int write_code) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		int result = 0;
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("userid", userid);
+			map.put("write_code", write_code);
+			result = session.selectOne("product.love_check", map);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null)
+				session.close();
+		}
+		return result;
+	}
+	
+
+	
+	public void updateProduct(ProductDTO dto) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.insert("product.update", dto);
+		session.commit();
+		session.close();
+
+	}
+
+	public void deleteProduct(int write_code) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.delete("product.delete", write_code);
+		session.commit();
+		session.close();
+
+	}
+	
+	public void see(int write_code) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.update("product.see", write_code);
+		session.commit();
+		session.close();
+	}
+
+}
