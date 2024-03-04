@@ -8,7 +8,8 @@
 		select rownum
 		as rn, A.*
 		from (
-		select * from product order by write_code desc
+		select * from product where status_code='0'order by
+		write_code desc
 		) A
 		)
 		where rn between #{start} and #{end}
@@ -27,10 +28,12 @@
 	</select>
 
 	<select id="mylist" resultType="market.ProductDTO">
-		select * from product
-		where
-		userid
-		= #{userid}
+		select
+		p.userid,p.write_code,p.subject,p.price,p.contents,p.filename,c.status_type
+		from product p , cart c
+		where c.status_code=p.status_code and userid
+		=#{userid}
+		order by p.status_code
 	</select>
 
 
@@ -64,5 +67,29 @@
 	</update>
 
 
+	<update id="status">
+		update product set status_code=#{status_code} where
+		write_code=#{write_code}
+	</update>
 
+	<select id="search" resultType="market.ProductDTO">
+
+		select * from (
+		select rownum as rn, A.*
+		from (
+		select * from product where
+		status_code='0' and subject like '%' || #{keyword} || '%' order by
+		write_code desc
+		) A
+		)
+		where rn between #{start} and #{end}
+
+	</select>
+	
+	<select id="search_count" resultType="int">
+		select count(*) from product where subject like '%' || #{keyword} || '%'
+	</select>
+	
+	
+	
 </mapper>

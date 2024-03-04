@@ -30,6 +30,7 @@ $(function() {
 		let articleId = $(this).attr("data-id");
 		
 		location.href = "/market/board_servlet/view.do?num=" + articleId;
+		
 	});
 });
 </script>
@@ -90,6 +91,13 @@ $(function() {
 </select>
 <input name="keyword" value="${keyword}">
 <input type="submit" value="검색" id="btnSearch"> 
+
+
+
+
+
+
+
 <button type="button" id="btnWrite">게시글 작성</button>
 </form>
 <article>	

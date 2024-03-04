@@ -1,5 +1,9 @@
 package auction;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -9,15 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import love.LoveDAO;
+import login.MemberDAO;
 import market.PageUtil;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-
-import org.json.simple.JSONObject;
 
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10)
 public class AuctionController extends HttpServlet {
@@ -28,7 +25,7 @@ public class AuctionController extends HttpServlet {
 		String url = request.getRequestURI();
 		String path = request.getContextPath();
 		AuctionDAO dao = new AuctionDAO();
-
+		MemberDAO mdao = new MemberDAO();
 		if (url.indexOf("list.do") != -1) {
 			int count = dao.count();
 			int cur_page = 1;
@@ -40,6 +37,7 @@ public class AuctionController extends HttpServlet {
 			int end = page.getPageEnd();
 			List<AuctionDTO> list = dao.listAuction(start, end);
 
+			request.setAttribute("mdao", mdao);
 			request.setAttribute("list", list);
 			request.setAttribute("page", page);
 			RequestDispatcher rd = request.getRequestDispatcher("/auction/auction_list.jsp");
@@ -58,15 +56,15 @@ public class AuctionController extends HttpServlet {
 
 		} else if (url.indexOf("insert_auction.do") != -1) {
 			ServletContext application = request.getSession().getServletContext();
-			// String img_path1 = application.getRealPath("/images/");
-			String img_path = "C:/work/market/src/main/webapp/images/";
+			String img_path1 = application.getRealPath("/images/");
+			// String img_path = "C:/work/market/src/main/webapp/images/";
 			String filename = " ";
 			try {
 				for (Part part : request.getParts()) {
 					filename = part.getSubmittedFileName();
 					if (filename != null && !filename.trim().equals("")) {
-						// part.write(img_path1 + filename);
-						part.write(img_path + filename);
+						part.write(img_path1 + filename);
+						// part.write(img_path + filename);
 						break;
 					}
 				}
@@ -85,6 +83,7 @@ public class AuctionController extends HttpServlet {
 			dto.setPrice(price);
 			dto.setContents(contents);
 			dto.setUserid(userid);
+			dto.setBiduserid(userid);
 			if (filename == null || filename.trim().equals("")) {
 				filename = "-";
 			}
@@ -101,22 +100,32 @@ public class AuctionController extends HttpServlet {
 			rd.forward(request, response);
 
 		} else if (url.indexOf("bid.do") != -1) {
-			HttpSession session = request.getSession();
-			String biduserid = (String) session.getAttribute("userid");
+
+			String biduserid = request.getParameter("biduserid");
 			int price = Integer.parseInt(request.getParameter("bidPrice"));
 			int auction_code = Integer.parseInt(request.getParameter("auction_code"));
+			System.out.println(biduserid);
+			System.out.println(price);
+			System.out.println(auction_code);
 			dao.bid(price, biduserid, auction_code);
 
 		} else if (url.indexOf("updatePriceAndBidder.do") != -1) {
 			int auction_code = Integer.parseInt(request.getParameter("auction_code"));
 			AuctionDTO dto = dao.getAuctionInfo(auction_code);
 			int price = dto.getPrice();
-			String biduser = dto.getBiduserid();
+			String bidder = dto.getBiduserid();
+			int time = dto.getTime();
+			System.out.println(bidder);
+			System.out.println(price);
+			System.out.println(auction_code);
+			dao.bid(price, bidder, auction_code);
 
-	        // JSON 형태로 응답 생성
-	        response.setContentType("application/json");
-	        PrintWriter out = response.getWriter();
-	        out.println("{\"price\":" + price + ", \"bidder\":\"" + biduser + "\"}");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("{ \"price\": " + price + ", \"bidder\": \"" + bidder + "\", \"time\": " + time + " }");
+			out.close();
+
 		}
 	}
 

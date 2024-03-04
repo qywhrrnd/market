@@ -23,6 +23,9 @@
 		<mapper resource="board/board.xml" />	
 		<mapper resource="love/love.xml" />
 		<mapper resource="auction/auction.xml" />
+		<mapper resource="chat/chat.xml" />
+		<mapper resource="comment/comment.xml" />
+		<mapper resource="report/report.xml" />
 	</mappers>
 </configuration>
 

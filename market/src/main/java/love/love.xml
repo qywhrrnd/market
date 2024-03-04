@@ -11,23 +11,28 @@
 		delete from love where userid=#{userid} and
 		write_code=#{write_code}
 	</delete>
-	
+
 	<select id="love_count" parameterType="map" resultType="int">
 		select
 		count(*) from love where write_code=#{write_code}
 	</select>
-	
-	
-	<select id="love_list" parameterType="String" resultType="love.LoveDTO">
-		select p.userid, p.subject, p.price,p.contents,p.filename,l.write_code
-		from product p,love l
-		where p.write_code = l.write_code and l.userid=#{userid}
+	<select id="love_list" parameterType="String"
+		resultType="love.LoveDTO">
+		select p.userid, p.subject,
+		p.price,p.contents,p.filename,l.write_code,p.status_code
+		from product
+		p,love l
+		where p.write_code = l.write_code and l.userid=#{userid} and
+		status_code =
+		0
 		order by l.write_code
 
 	</select>
-	
+
+
+
 	<delete id="love_delete">
-	delete from love where write_code = #{write_code}
+		delete from love where write_code = #{write_code}
 	</delete>
 
 </mapper>

@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 	function showPostcode() {
 		new daum.Postcode(
@@ -38,7 +39,7 @@
 </script>
 
 
-<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script>
 	function join() {
 		let form1 = $("#form1");
@@ -139,6 +140,25 @@
 			}
 		});
 	}
+	function emailcheck() {
+		let email = document.getElementById("email").value;
+		$.ajax({
+			url : "/market/login_servlet/EmailCheck.do",
+			type : "GET",
+			data : {
+				email : email
+			},
+			success : function(txt) {
+				$("#emailresult").html(txt);
+				
+				if (txt.includes("중복된 이메일입니다.")) {
+					$("#loginButton").prop("disabled", true);
+				} else {
+					$("#loginButton").prop("disabled", false);
+				}
+			}
+		});
+	}
 
 	// 아이디 입력란이 변경될 때마다 로그인 버튼 상태를 확인
 	$("#userid").on("input", function() {
@@ -167,14 +187,26 @@
 .button-location {
 	
 }
+
+a {
+  text-decoration: none; /* 링크의 밑줄 제거 */
+  color: inherit; /* 부모 요소의 색상 상속 */
+}
 </style>
 </head>
 <body>
-	<%@ include file="../main/menu.jsp"%>
-	<div class="container">
-		<h1>회원가입</h1>
+   <div class="container">
+      <a href="../main/main.jsp">
+         <h1>..마켓</h1>
+      </a>
+      <ul class="links">
+      <li><a href="#" id="signup">회원가입</a>
+         </li>
+         <li><a onclick="location.href='../login/login.jsp'" id="signin">로그인</a></li>
+      </ul>
 
-		<form name="form1" id="form1" method="post">
+
+		<form name="form1" id="form1" method="post" >
 			<div class="first-input input__block first-input__block">
 				<input placeholder="아이디" type="text" name="userid" id="userid">
 				<div id="result"></div>
@@ -185,11 +217,13 @@
 				<div id="passwordresult"></div>
 				<br> <input placeholder="이름" type="text" name="name" id="name"><br>
 				<input placeholder="닉네임" type="text" name="nickname" id="nickname"><br>
-				<input placeholder="생년월일" type="text" name="birth" id="birth"><br>
-				<input type="tel" name="phone" id="phone"
+				<input placeholder="생년월일" type="number" name="birth" id="birth"><br>
+				<input type="number" name="phone" id="phone"
 					pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" title="###-####-####"
-					placeholder="예) 010-1234-5678"><br> <input
-					placeholder="이메일" type="text" name="email" id="email"><br>
+					placeholder="예) 010-1234-5678"><br> 
+				<input placeholder="이메일" type="text" name="email" id="email"><br>
+				<div id="emailresult"></div>
+				<input type="button" style="border-bottom: 1px;" value="중복확인" onclick="emailcheck()"> <br>
 				<div class="zip-code-group">
 					<input placeholder="우편번호" name="zipcode" id="post_code" readonly>&nbsp;&nbsp;&nbsp;
 					<input type="button" onclick="showPostcode()" value="우편번호 찾기">

@@ -20,10 +20,10 @@
 
 	<insert id="insert">
 		insert into auction (auction_code,
-		userid,subject,price, contents, filename, time)values
+		userid,subject,price, contents, filename, time, biduserid)values
 		((select
 		nvl(max(auction_code)+1,1)from auction),#{userid}, #{subject},
-		#{price},#{contents}, #{filename}, 3600)
+		#{price},#{contents}, #{filename}, 30, #{biduserid})
 	</insert>
 
 	<select id="detail" resultType="auction.AuctionDTO">

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import board.BoardDTO;
 import sqlmap.MybatisManager;
 
 public class ProductDAO {
@@ -102,5 +103,48 @@ public class ProductDAO {
 		session.commit();
 		session.close();
 	}
+
+	
+	public void updateStatus(ProductDTO dto) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.update("product.status",dto);
+		session.commit();
+		session.close();
+	}
+	
+	public List<ProductDTO> search(String keyword, int start, int end) {
+		List<ProductDTO> list = null;
+		SqlSession session = MybatisManager.getInstance().openSession();
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("keyword", keyword);
+			map.put("start", start);
+			map.put("end", end);
+			list = session.selectList("product.search", map);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null)
+				session.close();
+		}
+		return list;
+	}
+	
+	public int count(String keyword) {
+		int result = 0;
+		SqlSession session = MybatisManager.getInstance().openSession();
+		try {
+			result = session.selectOne("product.search_count", keyword);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null)
+				session.close();
+		}
+		return result;
+	}
+	
+	
 
 }
