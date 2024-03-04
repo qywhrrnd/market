@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chat">
+
+	<select id="boxlist" resultType="chat.ChattingDTO">
+		SELECT DISTINCT fromid, toid, MAX(time) OVER (PARTITION BY fromid) AS max_time
+		FROM chatting
+		WHERE fromid = #{userid} OR toid = #{userid}
+	</select>
+
+
+	<select id="chatlist" resultType="chat.ChattingDTO">
+		SELECT *
+FROM chatting
+WHERE (fromid = #{userid} AND toid = #{toid}) OR (fromid = #{toid} AND toid = #{userid})
+ORDER BY time
+	</select>
+
+
+
+	<insert id="chatwrite">
+		insert into chatting values
+		(#{fromid},#{toid},#{chatcomment},#{time})
+	</insert>
+
+
+	<select id="chatupdate" resultType="chat.ChattingDTO">
+		select * from chatting where
+		(fromid = #{toid} and toid = #{userid}) and time > #{time}
+		order by time
+	</select>
+
+
+</mapper>
