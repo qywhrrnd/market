@@ -1,17 +1,16 @@
 package board;
 
+import java.io.IOException;
+import java.util.List;
+
+import comment.CommentDAO;
+import comment.CommentDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.util.List;
-
-import javax.persistence.metamodel.SetAttribute;
 
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -20,6 +19,8 @@ public class BoardController extends HttpServlet {
 		String url = request.getRequestURI();
 		String path =request.getContextPath();
 		BoardDAO dao = new BoardDAO();
+		CommentDAO dao2 = new CommentDAO();
+		CommentDTO dto2 = new CommentDTO(); 
 		if(url.indexOf("list.do") != -1) {
 			int count = dao.count();
 			int cur_page = 1;
@@ -39,8 +40,8 @@ public class BoardController extends HttpServlet {
 			
 		} else if(url.indexOf("search.do") != -1) {
 			String search_option = request.getParameter("search_option");
-			String keyword = request.getParameter("keyword");
-			int count = dao.search_count(search_option, keyword);
+			String key_word = request.getParameter("key_word");
+			int count = dao.search_count(search_option, key_word);
 			int cur_page = 1;
 			if (request.getParameter("cur_page") != null) {
 				cur_page = Integer.parseInt(request.getParameter("cur_page"));
@@ -49,10 +50,10 @@ public class BoardController extends HttpServlet {
 			int start = page.getPageBegin();
 			int end = page.getPageEnd();
 			
-			List<BoardDTO> list = dao.list_search(search_option,keyword,start,end);
+			List<BoardDTO> list = dao.list_search(search_option,key_word,start,end);
 			request.setAttribute("list", list);
 			request.setAttribute("search_option", search_option);
-			request.setAttribute("keyword", keyword);			
+			request.setAttribute("key_word", key_word);			
 			request.setAttribute("page", page);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/board/board_list.jsp");
@@ -72,7 +73,6 @@ public class BoardController extends HttpServlet {
 			dto.setContent(content);
 			dao.insert(dto);
 			
-			
 			response.sendRedirect(path + "/board_servlet/list.do");
 		} else if (url.indexOf("view.do") != -1) {
 			int num = Integer.parseInt(request.getParameter("num"));
@@ -81,22 +81,30 @@ public class BoardController extends HttpServlet {
 			BoardDTO dto = dao.view(num);
 			request.setAttribute("dto", dto);
 			
+			 
+			 
+			 
+//		     List<CommentDTO> list = dao2.getList(num);
+//		     request.setAttribute("list", list);
+			
 			RequestDispatcher rd = request.getRequestDispatcher("/board/board_view.jsp");
 			rd.forward(request, response);
 			
 		} else if (url.indexOf("update.do") != -1) {
 			BoardDTO dto = new BoardDTO();
-			String nickname = request.getParameter("nickname");
+			HttpSession session = request.getSession();
+			String userid =(String)session.getAttribute("userid");
 			String subject = request.getParameter("subject");
 			String content = request.getParameter("content");
-			
 			int num = Integer.parseInt(request.getParameter("num"));
 			
+			
 			dto.setNum(num);
-			dto.setNickname(nickname);
+			dto.setUserid(userid);
 			dto.setSubject(subject);
 			dto.setContent(content);
 			dao.update(dto);
+			
 			request.setAttribute("dto", dto);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/board/board_view.jsp");

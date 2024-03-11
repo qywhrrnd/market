@@ -1,7 +1,7 @@
 package board;
 
 public class PageUtil {
-	public static final int PAGE_SCALE = 10;
+	public static final int PAGE_SCALE = 15;
 	//페이지당 게시물 수
 	
 	public static final int BLOCK_SCALE = 10;

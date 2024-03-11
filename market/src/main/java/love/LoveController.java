@@ -48,15 +48,12 @@ public class LoveController extends HttpServlet {
 			dto.setUserid(userid);
 			List<LoveDTO> list = dao.love_list(userid); // List 타입을 LoveDTO로 변경
 			request.setAttribute("filesize", list.size());
-			System.out.println(list.size());
 			request.setAttribute("list", list);
-			System.out.println(list);
 			RequestDispatcher rd = request.getRequestDispatcher("/product/lovelist.jsp");
 			rd.forward(request, response);
 
 		} else if (url.indexOf("delete.do") != -1) {
 			int write_code = Integer.parseInt(request.getParameter("write_code"));
-			System.out.println("delete"+write_code);
 			dao.love_delete(write_code);
 			response.sendRedirect(request.getContextPath()+ "/love_servlet/love_List.do");
 
@@ -66,7 +63,6 @@ public class LoveController extends HttpServlet {
 			if (num != null) {
 				for (int i = 0; i < num.length; i++) {
 					dao.love_delete(Integer.parseInt(num[i]));
-					System.out.println("deleteAll"+num);
 				}
 			}
 		response.sendRedirect(request.getContextPath()+ "/love_servlet/love_List.do");

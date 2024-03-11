@@ -55,4 +55,50 @@
     <servlet-name>AuctionController</servlet-name>
     <url-pattern>/at_servlet/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ChatController</display-name>
+    <servlet-name>ChatController</servlet-name>
+    <servlet-class>chat.ChatController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChatController</servlet-name>
+    <url-pattern>/chat_servlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CommentController</display-name>
+    <servlet-name>CommentController</servlet-name>
+    <servlet-class>comment.CommentController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CommentController</servlet-name>
+    <url-pattern>/comment_servlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ReportController</servlet-name>
+    <servlet-class>report.ReportController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReportController</servlet-name>
+    <url-pattern>/report_servlet/*</url-pattern>
+  </servlet-mapping>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/404code.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/500code.jsp</location>
+  </error-page>
+  <servlet>
+    <description></description>
+    <display-name>QuizController</display-name>
+    <servlet-name>QuizController</servlet-name>
+    <servlet-class>quiz.QuizController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuizController</servlet-name>
+    <url-pattern>/quiz_servlet/*</url-pattern>
+  </servlet-mapping>
 </web-app>

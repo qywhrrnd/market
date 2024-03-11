@@ -7,7 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@ include file="../main/menu.jsp" %>
-${result}
+<script>
+window.close();
+</script>
 </body>
 </html>

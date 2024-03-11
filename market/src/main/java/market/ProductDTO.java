@@ -20,7 +20,8 @@ public class ProductDTO {
 	private String filename;
 	private int love;
 	private int see;
-	
+	private int status_code;
+	private String status_type;
 
 	
 	

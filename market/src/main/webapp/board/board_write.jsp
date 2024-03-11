@@ -6,68 +6,83 @@
 <head>
 <%@ include file="../main/menu.jsp"%>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="http://code.jquery.com/jquery-3.7.1.js"></script>
+<title>게시글 작성</title>
+
 <script>
 function returnBtn() {
-	if(confirm("게시글 작성을 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.") == true) { // 확인
-		window.history.back();
-	} else {
-		return false;
-	}	
+   location.href = "/market/board_servlet/list.do";
 }
-$(function() {
-	$("#btnSave").click(function() {
-		let nickname = $("#nickname").val();
-		let subject = $("#subject").val();
-		let content = $("#content").val();
-		
-		if (subject == "") {
-			alert("제목을 입력하세요.");
-			$("#subject").focus();
-			return;
-		}
-		if (content == "") {
-			alert("내용을 입력하세요.");
-			$("#content").focus();
-			return;
-		}
-		document.form1.submit();
-	});
-});
 </script>
 <style>
-.board-write {
-	margin: 5 0px auto;
-	width: 100%;
-	table-layout: fixed;
+body {
+padding-top: 20px;
+font-family: Arial, sans-serif;
+}
+.container {
+max-width: 600px;
+margin: 0 auto;
+}
+h2 {
+margin-bottom: 30px;
+}
+.form-control {
+margin-bottom: 15px;
+}
+
+        
+  /* 푸터 스타일 */
+#footer {
+    position: absolute; /* 절대 위치 설정 */
+    bottom: 0; /* 아래로부터 0px 위치 */
+    width: 100%; /* 전체 너비 설정 */
+    text-align: center; /* 가운데 정렬 */
+    padding: 20px;
+    border-top: 1px solid #bcbcbc;
+    }
+    
+.btn-outline-gagi {
+  --bs-btn-color:   #9523ff;
+  --bs-btn-border-color:    #9523ff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg:    #9523ff;
+  --bs-btn-hover-border-color:    #9523ff;
+  --bs-btn-focus-shadow-rgb: 25, 135, 84;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg:    #9523ff;
+  --bs-btn-active-border-color:    #9523ff;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color:    #9523ff;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color:    #9523ff;
+  --bs-gradient: none;
 }
 </style>
 </head>
 <body>
-<h2>게시글 작성</h2>
-<form name="form1" method="post" action="/market/board_servlet/insert.do" >
-<table class="board-write">
-	<tr>
-		<td>제목</td>
-		<td><input type="text" name="subject"></td>
-	</tr>
-	<tr>
-		<td>닉네임</td>
-		<td><input value="${sessionScope.nickname}" name="nickname" readonly></td>
-	</tr>
-	<tr>
-		<td>내용</td>
-		<td><textarea name="content" rows="5" cols="50"></textarea></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td colspan="2" align="center">
-			<input type="button" value="확인" id="btnSave">
-			<input type="button" value="나가기" onclick="returnBtn()">
-		</td>
-	</tr>
-</table>
-</form>
+    <div class="container">
+        <h2>게시글 작성</h2>
+        <form name="form1" class="form-control" style="width: 100%;" method="post" action="/market/board_servlet/insert.do" style>
+            <div class="form-group">
+                <label for="subject">제목</label>
+                <input type="text" class="form-control" style="width: 100%;" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <input type="text" class="form-control" style="width: 100%;" id="nickname" name="nickname" value="${sessionScope.nickname}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea class="form-control" style="width: 100%;" id="content" name="content" rows="5" placeholder="내용을 입력해주세요" required></textarea>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-outline-gagi">확인</button>
+                <button type="button" class="btn btn-outline-gagi" onclick="returnBtn()">나가기</button>
+            </div>
+        </form>
+    </div>
+    
+<div id="footer">
+<%@ include file="../main/footer.jsp"%>
+</div>
 </body>
 </html>

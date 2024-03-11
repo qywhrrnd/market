@@ -19,5 +19,7 @@ public class LoveDTO {
 	private int price;
 	private String contents;
 	private String filename;
+	private int idx;
+	
 
 }

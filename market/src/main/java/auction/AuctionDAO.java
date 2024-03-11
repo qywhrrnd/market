@@ -24,6 +24,12 @@ public class AuctionDAO {
 
 	public void insertAuction(AuctionDTO dto) {
 		SqlSession session = MybatisManager.getInstance().openSession();
+		String contents = dto.getContents();
+	      contents = contents.replace("<", "&lt;");
+	      contents = contents.replace(">", "&gt;");
+	      contents = contents.replace("\n", "<br>");
+	      contents = contents.replace("  ", "&nbsp;&nbsp;");
+	      dto.setContents(contents);
 		session.insert("auction.insert", dto);
 		session.commit();
 		session.close();
@@ -78,6 +84,15 @@ public class AuctionDAO {
 		AuctionDTO dto = session.selectOne("auction.getAuctionInfo", auctionCode);
 		session.close();
 		return dto;
+	}
+	
+	
+	public void deleteAuction(int auctionCode) {
+		SqlSession session = MybatisManager.getInstance().openSession();
+		session.delete("auction.delete", auctionCode);
+		session.commit();
+		session.close();
+
 	}
 
 }

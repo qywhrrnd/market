@@ -51,5 +51,6 @@
 			</c:if>
 		</c:forEach>
 	</table>
+	<%@ include file="../main/footer.jsp"%>
 </body>
 </html>
